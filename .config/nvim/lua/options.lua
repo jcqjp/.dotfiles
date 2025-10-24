@@ -42,3 +42,5 @@ vim.o.undofile = true
 vim.o.tabstop = 2 -- 1 tab = 2 espaces
 vim.o.shiftwidth = 2 -- Indentation de 2 espaces
 vim.o.expandtab = true -- Convertit les tabs en espaces
+-- Placer la ligne de commande en haut
+vim.opt.cmdheight = 0
