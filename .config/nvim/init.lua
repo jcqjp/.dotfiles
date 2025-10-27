@@ -28,8 +28,9 @@ rtp:prepend(lazypath)
 --
 -- NOTE: Here is where you install your plugins.
 require("lazy").setup({
-  require("plugins.mason"), -- lsp formatter manager
   require("plugins.onedark"), -- One dark theme
+  require("plugins.treesitter"),
+  require("plugins.mason"), -- lsp formatter manager
   require("plugins.gitsigns"), -- Add signs for git tracking
   require("plugins.highlights"),
   require("plugins.autopairs"),
