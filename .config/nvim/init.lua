@@ -40,7 +40,6 @@ require("lazy").setup({
   require("plugins.whichkey"),
   require("plugins.vim-visual-multi"),
   require("plugins.toogleterm"),
-  require("plugins.neoscroll"),
 }, {
   ui = {
     -- If you are using a Nerd Font: set icons to an empty table which will use the
