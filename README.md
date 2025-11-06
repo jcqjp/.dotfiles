@@ -16,6 +16,12 @@ sudo apt install git
 sudo apt install stow
 ```
 
+### Node and NPM for prettier
+
+```
+sudo apt install nodejs npm
+```
+
 ## Installation
 
 Clone dotfiles repo in homefolder
