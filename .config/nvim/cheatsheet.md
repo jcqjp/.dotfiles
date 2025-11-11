@@ -74,6 +74,25 @@ p Colle après
 P Colle avant
 "\*p Colle du presse-papier système
 
+# Suppressions
+
+Supprimer le contenu seulement :
+vim
+di"    " Delete Inside " - supprime à l'intérieur des "
+di'    " Delete Inside ' - supprime à l'intérieur des '
+di`    " Delete Inside ` - supprime à l'intérieur des `
+
+Supprimer contenu + guillemets :
+vim
+da"    " Delete Around " - supprime tout (guillemets inclus)
+da'    " Delete Around ' - supprime tout (guillemets inclus)
+da`    " Delete Around ` - supprime tout (guillemets inclus)
+
+Supprimer jusqu'à la fin de la string :
+vim
+dt"    " Delete Till " - supprime jusqu'au prochain " (exclus)
+df"    " Delete Find " - supprime jusqu'au prochain " (inclus)
+
 ---
 
 ### Motions
