@@ -105,5 +105,3 @@ source $ZSH/oh-my-zsh.sh
 
 export N_PREFIX="$HOME/n"; [[ :$PATH: == *":$N_PREFIX/bin:"* ]] || PATH+=":$N_PREFIX/bin"  # Added by n-install (see http://git.io/n-install-repo).
 
-# OpenClaw Completion
-source "/home/user1/.openclaw/completions/openclaw.zsh"
