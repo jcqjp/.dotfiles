@@ -105,3 +105,10 @@ source $ZSH/oh-my-zsh.sh
 
 export N_PREFIX="$HOME/n"; [[ :$PATH: == *":$N_PREFIX/bin:"* ]] || PATH+=":$N_PREFIX/bin"  # Added by n-install (see http://git.io/n-install-repo).
 
+
+# Added by LM Studio CLI (lms)
+export PATH="$PATH:/home/user1/.lmstudio/bin"
+# End of LM Studio CLI section
+
+# rocm 100% gpu stuck bug fix
+export GPU_MAX_HW_QUEUES=1
