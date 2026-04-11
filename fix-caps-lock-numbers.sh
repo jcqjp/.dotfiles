@@ -1,6 +1,7 @@
 #!/bin/bash
 # Script pour faire agir Caps Lock comme sous Windows (chiffres en Shift Lock)
 # Executer avec sudo
+# /!\ Déco/reco après execution
 
 # Sauvegarde du fichier original (optionnel mais recommandé)
 cp /usr/share/X11/xkb/symbols/fr /usr/share/X11/xkb/symbols/fr.backup
