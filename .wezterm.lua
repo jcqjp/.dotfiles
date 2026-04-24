@@ -5,6 +5,7 @@ config.font_size = 12
 config.font = wezterm.font("MesloLGSDZ Nerd Font")
 
 config.hide_tab_bar_if_only_one_tab = true
+--config.window_decorations = "RESIZE"
 
 config.colors = {
   background = '#0f0f12', -- background-color
@@ -46,5 +47,12 @@ config.colors = {
 
 config.initial_cols = 120
 config.initial_rows = 50
+
+config.window_padding = {
+  left = 0,
+  right = 0,
+  top = 0,
+  bottom = 0,
+}
 
 return config
