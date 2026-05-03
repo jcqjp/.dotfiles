@@ -30,9 +30,6 @@ config.colors = {
 
   tab_bar = {
     background = "#14191E",
-    active_tab = { bg_color = "#A7ABF2", fg_color = "#FFFFFF" },
-    inactive_tab = { bg_color = "#14191E", fg_color = "#686868" },
-    inactive_tab_edge = "#A7ABF2",
   },
 }
 
@@ -101,8 +98,8 @@ wezterm.on("format-tab-title", function(tab)
   local text = " " .. index .. ":" .. icon .. title .. " "
   if tab.is_active then
     return {
-      { Background = { Color = "#A7ABF2" } },
-      { Foreground = { Color = "#14191E" } },
+      { Background = { Color = "#14191E" } },
+      { Foreground = { Color = "#A7ABF2" } },
       { Text = text },
     }
   else
