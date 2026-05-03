@@ -4,10 +4,21 @@ local config = wezterm.config_builder()
 config.font_size = 12
 config.font = wezterm.font("MesloLGSDZ Nerd Font")
 
-config.hide_tab_bar_if_only_one_tab = true
+-- Window config
 config.window_decorations = "RESIZE"
 config.window_close_confirmation = "NeverPrompt"
+config.window_padding = { left = 0, right = 0, top = 0, bottom = 0 }
+config.initial_cols = 120
+config.initial_rows = 50
+config.native_macos_fullscreen_mode = true
 
+-- Tabs config
+config.show_new_tab_button_in_tab_bar = false
+config.use_fancy_tab_bar = false
+config.tab_max_width = 12
+config.tab_bar_at_bottom = true
+
+-- Colors config
 config.colors = {
   foreground = "#DCDCDC",
   background = "#14191E",
@@ -33,12 +44,7 @@ config.colors = {
   },
 }
 
-config.show_new_tab_button_in_tab_bar = false
-config.use_fancy_tab_bar = false
-config.tab_max_width = 12
-config.tab_bar_at_bottom = true
-
--- Icônes pour les programmes courants (police Nerd Font obligatoire)
+-- Tabs icons
 local function get_icon(process_name)
   local name = process_name:lower()
   if name:find("zsh") or name:find("bash") or name:find("fish") then
@@ -86,6 +92,7 @@ local function get_icon(process_name)
   end
 end
 
+-- Dynamic tabs colors
 wezterm.on("format-tab-title", function(tab)
   local title = tab.active_pane.title or "no title"
   local index = tab.tab_index + 1
@@ -104,10 +111,10 @@ wezterm.on("format-tab-title", function(tab)
     if pane.domain_name == "desktop" then
       fg_color = "#ECE100"
     else
-      fg_color = "#A7ABF2"   -- couleur par défaut pour les onglets actifs locaux ou autres domaines
+      fg_color = "#A7ABF2" -- couleur par défaut pour les onglets actifs locaux ou autres domaines
     end
   else
-    fg_color = "#686868"     -- onglet inactif
+    fg_color = "#686868" -- onglet inactif
   end
 
   return {
@@ -117,24 +124,36 @@ wezterm.on("format-tab-title", function(tab)
   }
 end)
 
-config.initial_cols = 120
-config.initial_rows = 50
-
-config.window_padding = { left = 0, right = 0, top = 0, bottom = 0 }
-config.native_macos_fullscreen_mode = true
-
+-- Keyboard shortcuts
 if wezterm.target_triple:find("darwin") then
   config.keys = {
     { key = "f", mods = "CMD|CTRL", action = wezterm.action.ToggleFullScreen },
   }
 end
 
-config.ssh_domains = {
-  {
-    name = 'desktop', -- Un nom unique pour ce domaine
-    remote_address = 'desktop', -- L'adresse de connexion SSH
-    username = 'user1', -- Votre nom d'utilisateur sur la machine distante
-  },
+-- Domains config
+--[[ local unix_domain_name
+
+if wezterm.target_triple:find("linux") then
+  unix_domain_name = "desktop"
+elseif wezterm.target_triple:find("darwin") then
+  unix_domain_name = "mac"
+
+  config.ssh_domains = {
+    {
+      name = "desktop",
+      remote_address = "desktop",
+      username = "user1",
+    }
+  }
+else
+  unix_domain_name = "local" -- fallback
+end
+
+config.unix_domains = {
+  { name = unix_domain_name }
 }
+
+config.default_domain = unix_domain_name ]]
 
 return config
