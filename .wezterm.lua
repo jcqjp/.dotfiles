@@ -96,19 +96,25 @@ wezterm.on("format-tab-title", function(tab)
   end
 
   local text = " " .. index .. ":" .. icon .. title .. " "
+
+  -- Choix de la couleur de texte selon l'état actif/inactif ET le domaine
+  local fg_color
   if tab.is_active then
-    return {
-      { Background = { Color = "#14191E" } },
-      { Foreground = { Color = "#A7ABF2" } },
-      { Text = text },
-    }
+    -- Si le domaine est 'desktop', on utilise le jaune demandé
+    if pane.domain_name == "desktop" then
+      fg_color = "#ECE100"
+    else
+      fg_color = "#A7ABF2"   -- couleur par défaut pour les onglets actifs locaux ou autres domaines
+    end
   else
-    return {
-      { Background = { Color = "#14191E" } },
-      { Foreground = { Color = "#686868" } },
-      { Text = text },
-    }
+    fg_color = "#686868"     -- onglet inactif
   end
+
+  return {
+    { Background = { Color = "#14191E" } },
+    { Foreground = { Color = fg_color } },
+    { Text = text },
+  }
 end)
 
 config.initial_cols = 120
@@ -122,5 +128,13 @@ if wezterm.target_triple:find("darwin") then
     { key = "f", mods = "CMD|CTRL", action = wezterm.action.ToggleFullScreen },
   }
 end
+
+config.ssh_domains = {
+  {
+    name = 'desktop', -- Un nom unique pour ce domaine
+    remote_address = 'desktop', -- L'adresse de connexion SSH
+    username = 'user1', -- Votre nom d'utilisateur sur la machine distante
+  },
+}
 
 return config
