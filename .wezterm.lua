@@ -1,9 +1,22 @@
 local wezterm = require("wezterm")
 local config = wezterm.config_builder()
+local hostname = wezterm.hostname()
+
 
 -- Font
+config.font = wezterm.font_with_fallback({
+  { family = "MesloLGSDZ Nerd Font", weight = "Regular" },
+  "Menlo",
+  "monospace",
+})
+if hostname == "desktop" then
+  config.font_size = 11
+end
+if hostname == "laptop.local" then
+  config.font_size = 12
+end
 config.font_size = 12
-config.font = wezterm.font("MesloLGSDZ Nerd Font")
+
 
 -- Window config
 config.window_close_confirmation = "NeverPrompt"
@@ -12,11 +25,6 @@ config.initial_cols = 120
 config.initial_rows = 50
 config.native_macos_fullscreen_mode = true -- ignoré sous Linux
 
--- Tabs config
-config.show_new_tab_button_in_tab_bar = false
-config.use_fancy_tab_bar = false
-config.tab_max_width = 12
-config.tab_bar_at_bottom = true
 
 -- Colors config
 config.colors = {
@@ -40,6 +48,7 @@ config.colors = {
   },
 }
 
+
 -- Keyboard shortcuts
 config.keys = {}
 if wezterm.target_triple:find("darwin") then
@@ -51,11 +60,8 @@ table.insert(config.keys, {
   key = "L", mods = "CTRL", action = wezterm.action.ShowDebugOverlay,
 })
 
--- ==============================
--- Domaines dynamiques selon hostname
--- ==============================
-local hostname = wezterm.hostname()
 
+-- Domaines dynamiques selon hostname
 local unix_domain_name
 if hostname == "desktop" then
   unix_domain_name = "desktop"
@@ -70,6 +76,7 @@ config.unix_domains = {
 }
 config.default_domain = unix_domain_name
 
+
 -- Domaine SSH
 if unix_domain_name == "laptop" then
   config.ssh_domains = {
@@ -81,66 +88,19 @@ if unix_domain_name == "laptop" then
   }
 end
 
--- ==============================
--- Icones et couleurs des onglets
--- ==============================
-local function get_icon(process_name)
-  local name = process_name:lower()
-  if name:find("zsh") or name:find("bash") or name:find("fish") then
-    return "  "
-  elseif name:find("vim") or name:find("nvim") then
-    return "  "
-  elseif name:find("ssh") then
-    return "  "
-  elseif name:find("python") then
-    return "  "
-  elseif name:find("node") then
-    return "  "
-  elseif name:find("docker") then
-    return "  "
-  elseif name:find("git") then
-    return "  "
-  elseif name:find("lazygit") then
-    return "  "
-  elseif name:find("htop") or name:find("top") then
-    return "  "
-  elseif name:find("ranger") or name:find("lf") then
-    return "  "
-  elseif name:find("tmux") then
-    return "  "
-  elseif name:find("rust") then
-    return "  "
-  elseif name:find("go") then
-    return "  "
-  elseif name:find("ruby") then
-    return "  "
-  elseif name:find("lua") then
-    return "  "
-  elseif name:find("psql") or name:find("postgres") then
-    return "  "
-  elseif name:find("mysql") or name:find("mariadb") then
-    return "  "
-  elseif name:find("redis") then
-    return "  "
-  elseif name:find("npm") or name:find("yarn") then
-    return "  "
-  elseif name:find("brew") then
-    return "  "
-  else
-    return "  "
-  end
-end
+
+-- Tabs styling
+config.show_new_tab_button_in_tab_bar = false
+config.use_fancy_tab_bar = false
+config.tab_max_width = 12
+config.tab_bar_at_bottom = true
 
 wezterm.on("format-tab-title", function(tab)
   local pane = tab.active_pane
   local title = pane.title or "no title"
   local index = tab.tab_index + 1
-  local icon = ""
-  if pane.foreground_process_name then
-    icon = get_icon(pane.foreground_process_name)
-  end
 
-  local text              = " " .. index .. ":" .. icon .. " " .. title .. " "
+  local text              = " " .. index .. ":" .. " " .. title .. " "
 
   local domain            = pane.domain_name
   local local_hostname    = wezterm.hostname() -- hostname de la machine qui exécute WezTerm
