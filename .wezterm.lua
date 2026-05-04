@@ -15,7 +15,6 @@ end
 if hostname == "laptop.local" then
   config.font_size = 12
 end
-config.font_size = 12
 
 
 -- Window config
