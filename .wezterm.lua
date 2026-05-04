@@ -6,7 +6,6 @@ config.font_size = 12
 config.font = wezterm.font("MesloLGSDZ Nerd Font")
 
 -- Window config
-config.window_decorations = "RESIZE"
 config.window_close_confirmation = "NeverPrompt"
 config.window_padding = { left = 0, right = 0, top = 0, bottom = 0 }
 config.initial_cols = 120
@@ -42,22 +41,20 @@ config.colors = {
 }
 
 -- Keyboard shortcuts
+config.keys = {}
 if wezterm.target_triple:find("darwin") then
-  config.keys = {
-    { key = "f", mods = "CMD|CTRL", action = wezterm.action.ToggleFullScreen },
-  }
+  table.insert(config.keys, {
+    key = "f", mods = "CMD|CTRL", action = wezterm.action.ToggleFullScreen,
+  })
 end
-config.keys = {
-  { key = 'L', mods = 'CTRL', action = wezterm.action.ShowDebugOverlay },
-}
+table.insert(config.keys, {
+  key = "L", mods = "CTRL", action = wezterm.action.ShowDebugOverlay,
+})
 
 -- ==============================
 -- Domaines dynamiques selon hostname
 -- ==============================
 local hostname = wezterm.hostname()
-
-wezterm.log_info("hostname")
-wezterm.log_info(hostname)
 
 local unix_domain_name
 if hostname == "desktop" then
@@ -67,9 +64,6 @@ elseif hostname == "laptop.local" then
 else
   unix_domain_name = "local"
 end
-
-wezterm.log_info("unix domain name")
-wezterm.log_info(unix_domain_name)
 
 config.unix_domains = {
   { name = unix_domain_name }
@@ -146,32 +140,23 @@ wezterm.on("format-tab-title", function(tab)
     icon = get_icon(pane.foreground_process_name)
   end
 
-  local text              = " " .. index .. ":" .. icon .. title .. " "
+  local text              = " " .. index .. ":" .. icon .. " " .. title .. " "
 
-  local domain            = pane.domain_name   -- peut être "local", "desktop", "SSH:desktop", etc.
+  local domain            = pane.domain_name
   local local_hostname    = wezterm.hostname() -- hostname de la machine qui exécute WezTerm
 
-  -- Détecter le type de machine en fonction du domaine ou, si domaine "local", du hostname
-  local is_desktop_domain = (domain == "desktop" or domain:find("SSH:desktop", 1, true))
-  local is_laptop_domain  = (domain == "laptop" or
-    (domain == "local" and local_hostname:match("^laptop"))) -- ajustez si besoin
-
-  -- (Optionnel) gérer le cas où le domaine est "local" sur le desktop
-  if domain == "local" and local_hostname == "desktop" then
-    is_desktop_domain = true
-  end
+  local is_desktop_domain = (domain == "desktop" or domain == "SSH:desktop")
+      or (domain == "local" and local_hostname == "desktop")
 
   local fg_color
   if tab.is_active then
     if is_desktop_domain then
-      fg_color = "#ECE100" -- Jaune actif desktop
-    elseif is_laptop_domain then
-      fg_color = "#A7ABF2" -- Bleu actif laptop
+      fg_color = "#ECE100"
     else
-      fg_color = "#DCDCDC" -- Autre domaine actif
+      fg_color = "#A7ABF2"
     end
   else
-    fg_color = "#686868"   -- Gris par défaut
+    fg_color = "#686868"
   end
 
   return {
