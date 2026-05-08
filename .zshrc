@@ -112,3 +112,6 @@ export PATH="$PATH:/home/user1/.lmstudio/bin"
 
 # rocm 100% gpu stuck bug fix
 export GPU_MAX_HW_QUEUES=1
+
+# Import d'un zshrc local
+[[ -f ~/.zshrc.local ]] && source ~/.zshrc.local
