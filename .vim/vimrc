@@ -24,3 +24,46 @@ let g:lightline = {
 " https://github.com/joshdick/onedark.vim
 " INSTRUCTIONS
 " Placer colors/onedark.vim dans ~/.vim/colors et autoload/onedark.vim dans ~/.vim/autoload
+
+" ======= VIM AUTOCOMPLETION ======
+" Définition des chemins de recherche pour gf, :find, et la complétion
+if has('win32')
+  " Windows : adapter ces chemins à ta version de Visual Studio et SDK
+  " Exemples pour VS 2019 / Windows 10 SDK
+  set path=.,,
+  let s:msvc_ver = '14.29.30133'       " version de MSVC (vérifie le dossier)
+  let s:win_sdk = '10.0.19041.0'       " version du Windows SDK
+  " Ajoute les dossiers d'include s'ils existent
+  if isdirectory('C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/VC/Tools/MSVC/' . s:msvc_ver . '/include')
+    let &path .= ',C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/VC/Tools/MSVC/' . s:msvc_ver . '/include'
+  endif
+  if isdirectory('C:/Program Files (x86)/Windows Kits/10/Include/' . s:win_sdk . '/ucrt')
+    let &path .= ',C:/Program Files (x86)/Windows Kits/10/Include/' . s:win_sdk . '/ucrt'
+  endif
+  " Tu peux aussi utiliser la variable d'environnement INCLUDE si elle est définie
+  if !empty($INCLUDE)
+    for incdir in split($INCLUDE, ';')
+      let &path .= ',' . substitute(incdir, '\', '/', 'g')
+    endfor
+  endif
+
+elseif has('macunix')
+  " macOS : chemins pour Xcode Command Line Tools
+  set path=.,,/usr/local/include,/usr/include
+  " Récupération dynamique du SDK actif via xcrun (si disponible)
+  if executable('xcrun')
+    let s:mac_sdk = system('xcrun --show-sdk-path 2>/dev/null')
+    if v:shell_error == 0
+      let s:mac_sdk = substitute(s:mac_sdk, '\n', '', '') . '/usr/include'
+      let &path .= ',' . s:mac_sdk
+    endif
+  endif
+
+else
+  " Linux et autres Unix
+  set path=.,,/usr/include,/usr/local/include
+  " Ajoute également les includes spécifiques à l'architecture si présents
+  if isdirectory('/usr/include/x86_64-linux-gnu')
+    let &path .= ',/usr/include/x86_64-linux-gnu'
+  endif
+endif
