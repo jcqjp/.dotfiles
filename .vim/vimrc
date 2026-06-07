@@ -49,7 +49,7 @@ if has('win32')
 
 elseif has('macunix')
   " macOS : chemins pour Xcode Command Line Tools
-  set path=.,,/usr/local/include,/usr/include
+  set path=.,,/usr/local/include,/usr/include,/opt/homebrew/include
   " Récupération dynamique du SDK actif via xcrun (si disponible)
   if executable('xcrun')
     let s:mac_sdk = system('xcrun --show-sdk-path 2>/dev/null')
