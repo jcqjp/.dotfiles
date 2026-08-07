@@ -115,3 +115,16 @@ export GPU_MAX_HW_QUEUES=1
 
 # Import d'un zshrc local
 [[ -f ~/.zshrc.local ]] && source ~/.zshrc.local
+
+# Hermes Agent — ensure ~/.local/bin is on PATH
+export PATH="$HOME/.local/bin:$PATH"
+
+# Less colorisation (man pages)
+export LESS_TERMCAP_md=$'\e[01;92m'   # gras (titres/fonctions) → bright green
+export LESS_TERMCAP_me=$'\e[0m'
+export LESS_TERMCAP_us=$'\e[04;94m'   # souligné (arguments) → bright blue/lavande (#A7ABF2)
+export LESS_TERMCAP_ue=$'\e[0m'
+export LESS_TERMCAP_so=$'\e[30;103m' # standout (recherche/status) → noir sur jaune (#ECE100)
+export LESS_TERMCAP_se=$'\e[0m'
+export LESS_TERMCAP_mb=$'\e[01;92m'  # blink → même vert que le gras
+export GROFF_NO_SGR=1
