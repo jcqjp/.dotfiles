@@ -59,6 +59,9 @@ table.insert(config.keys, {
   key = "L", mods = "CTRL", action = wezterm.action.ShowDebugOverlay,
 })
 
+-- Left option key macos
+config.send_composed_key_when_left_alt_is_pressed = true
+
 
 -- Domaines dynamiques selon hostname
 local unix_domain_name
