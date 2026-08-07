@@ -6,6 +6,11 @@ set expandtab
 set autoindent
 set smartindent
 
+" Ouvre les split window vers le bas
+" Hauteur de 12 lignes
+set splitbelow
+set termwinsize=12x0
+
 colorscheme onedark 
 syntax on
 set showmatch
