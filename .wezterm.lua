@@ -58,6 +58,9 @@ end
 table.insert(config.keys, {
   key = "L", mods = "CTRL", action = wezterm.action.ShowDebugOverlay,
 })
+table.insert(config.keys, {
+  key = "@", mods = "CTRL", action = wezterm.action.DisableDefaultAssignment,
+})
 
 -- Left option key macos
 config.send_composed_key_when_left_alt_is_pressed = true
