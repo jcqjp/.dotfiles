@@ -41,6 +41,9 @@ let g:lightline = {
   \ }
 set noshowmode
 
+" Utilise nasm pour interpreter tous les .asm
+autocmd BufRead,BufNewFile *.asm,*.inc set filetype=nasm
+
 " ======= ONE DARK INSTRUCTIONS =======
 " URL
 " https://github.com/joshdick/onedark.vim
