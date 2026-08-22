@@ -72,6 +72,19 @@ if wezterm.target_triple:find("darwin") then
   table.insert(config.keys, {
     key = "DownArrow", mods = "CMD|CTRL", action = wezterm.action.AdjustPaneSize({ "Down", 2 }),
   })
+
+  table.insert(config.keys, {
+    key = "LeftArrow", mods = "CMD|CTRL|ALT", action = wezterm.action.ActivatePaneDirection("Left"),
+  })
+  table.insert(config.keys, {
+    key = "RightArrow", mods = "CMD|CTRL|ALT", action = wezterm.action.ActivatePaneDirection("Right"),
+  })
+  table.insert(config.keys, {
+    key = "UpArrow", mods = "CMD|CTRL|ALT", action = wezterm.action.ActivatePaneDirection("Up"),
+  })
+  table.insert(config.keys, {
+    key = "DownArrow", mods = "CMD|CTRL|ALT", action = wezterm.action.ActivatePaneDirection("Down"),
+  })
 end
 table.insert(config.keys, {
   key = "L", mods = "CTRL", action = wezterm.action.ShowDebugOverlay,
