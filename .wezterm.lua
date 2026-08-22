@@ -51,6 +51,7 @@ config.colors = {
 -- Keyboard shortcuts
 config.keys = {}
 if wezterm.target_triple:find("darwin") then
+  -- Split panes
   table.insert(config.keys, {
     key = "f", mods = "CMD|CTRL", action = wezterm.action.ToggleFullScreen,
   })
@@ -60,30 +61,33 @@ if wezterm.target_triple:find("darwin") then
   table.insert(config.keys, {
     key = '=', mods = "CMD|CTRL", action = wezterm.action.SplitVertical,
   })
+
+  -- Resize panes
   table.insert(config.keys, {
-    key = "LeftArrow", mods = "CMD|CTRL", action = wezterm.action.AdjustPaneSize({ "Left", 2 }),
+    key = "LeftArrow", mods = "CMD|CTRL|ALT", action = wezterm.action.AdjustPaneSize({ "Left", 2 }),
   })
   table.insert(config.keys, {
-    key = "RightArrow", mods = "CMD|CTRL", action = wezterm.action.AdjustPaneSize({ "Right", 2 }),
+    key = "RightArrow", mods = "CMD|CTRL|ALT", action = wezterm.action.AdjustPaneSize({ "Right", 2 }),
   })
   table.insert(config.keys, {
-    key = "UpArrow", mods = "CMD|CTRL", action = wezterm.action.AdjustPaneSize({ "Up", 2 }),
+    key = "UpArrow", mods = "CMD|CTRL|ALT", action = wezterm.action.AdjustPaneSize({ "Up", 2 }),
   })
   table.insert(config.keys, {
-    key = "DownArrow", mods = "CMD|CTRL", action = wezterm.action.AdjustPaneSize({ "Down", 2 }),
+    key = "DownArrow", mods = "CMD|CTRL|ALT", action = wezterm.action.AdjustPaneSize({ "Down", 2 }),
   })
 
+  -- Switch panes
   table.insert(config.keys, {
-    key = "LeftArrow", mods = "CMD|CTRL|ALT", action = wezterm.action.ActivatePaneDirection("Left"),
+    key = "LeftArrow", mods = "CMD|CTRL", action = wezterm.action.ActivatePaneDirection("Left"),
   })
   table.insert(config.keys, {
-    key = "RightArrow", mods = "CMD|CTRL|ALT", action = wezterm.action.ActivatePaneDirection("Right"),
+    key = "RightArrow", mods = "CMD|CTRL", action = wezterm.action.ActivatePaneDirection("Right"),
   })
   table.insert(config.keys, {
-    key = "UpArrow", mods = "CMD|CTRL|ALT", action = wezterm.action.ActivatePaneDirection("Up"),
+    key = "UpArrow", mods = "CMD|CTRL", action = wezterm.action.ActivatePaneDirection("Up"),
   })
   table.insert(config.keys, {
-    key = "DownArrow", mods = "CMD|CTRL|ALT", action = wezterm.action.ActivatePaneDirection("Down"),
+    key = "DownArrow", mods = "CMD|CTRL", action = wezterm.action.ActivatePaneDirection("Down"),
   })
 end
 table.insert(config.keys, {
