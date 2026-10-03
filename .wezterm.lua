@@ -1,11 +1,35 @@
+--------------------------------------------------------------------------------
+-- Configuration WezTerm partagée entre deux machines :
+--   - "desktop"      : Linux (GNOME)
+--   - "laptop.local" : macOS
+--
+-- Police    : JetBrainsMono NF DemiBold (= SemiBold), taille 11 sur desktop, 12 sur laptop
+-- Fenêtre   : 120x50, sans padding, fermeture sans confirmation
+-- Couleurs  : thème sombre personnalisé (fond #14191E)
+--
+-- Raccourcis des panneaux :
+--                 Splits " / =      Navigation         Redimensionner (2 cellules)
+--   macOS   :     Cmd+Ctrl          Cmd+Ctrl+flèches   Cmd+Ctrl+Alt+flèches
+--   Linux   :     Ctrl+Alt          Ctrl+Shift+flèches Alt+Shift+flèches
+--   Les combinaisons Linux évitent celles déjà prises par GNOME.
+--   macOS uniquement : Cmd+Ctrl+F pour le plein écran.
+--   Tous systèmes    : Ctrl+Shift+L (overlay de debug), Ctrl+@ désactivé.
+--
+-- Domaines  : un domaine unix nommé d'après la machine, utilisé par défaut ;
+--             depuis le laptop, un domaine SSH "desktop" (utilisateur user1).
+-- Onglets   : barre en bas, onglets numérotés ; l'onglet actif est jaune
+--             s'il tourne sur desktop, violet sinon, gris s'il est inactif.
+--------------------------------------------------------------------------------
+
 local wezterm = require("wezterm")
 local config = wezterm.config_builder()
 local hostname = wezterm.hostname()
+local act = wezterm.action
 
 
 -- Font
 config.font = wezterm.font_with_fallback({
-  { family = "MesloLGSDZ Nerd Font", weight = "Regular" },
+  { family = "JetBrainsMono NF", weight = "DemiBold" },
   "Menlo",
   "monospace",
 })
@@ -50,51 +74,59 @@ config.colors = {
 
 -- Keyboard shortcuts
 config.keys = {}
-if wezterm.target_triple:find("darwin") then
-  -- Split panes
-  table.insert(config.keys, {
-    key = "f", mods = "CMD|CTRL", action = wezterm.action.ToggleFullScreen,
-  })
-  table.insert(config.keys, {
-    key = '"', mods = "CMD|CTRL", action = wezterm.action.SplitHorizontal,
-  })
-  table.insert(config.keys, {
-    key = '=', mods = "CMD|CTRL", action = wezterm.action.SplitVertical,
-  })
 
-  -- Resize panes
-  table.insert(config.keys, {
-    key = "LeftArrow", mods = "CMD|CTRL|ALT", action = wezterm.action.AdjustPaneSize({ "Left", 2 }),
-  })
-  table.insert(config.keys, {
-    key = "RightArrow", mods = "CMD|CTRL|ALT", action = wezterm.action.AdjustPaneSize({ "Right", 2 }),
-  })
-  table.insert(config.keys, {
-    key = "UpArrow", mods = "CMD|CTRL|ALT", action = wezterm.action.AdjustPaneSize({ "Up", 2 }),
-  })
-  table.insert(config.keys, {
-    key = "DownArrow", mods = "CMD|CTRL|ALT", action = wezterm.action.AdjustPaneSize({ "Down", 2 }),
-  })
+local is_darwin = wezterm.target_triple:find("darwin") ~= nil
+local is_linux = wezterm.target_triple:find("linux") ~= nil
 
-  -- Switch panes
+-- Fullscreen (macOS uniquement)
+if is_darwin then
   table.insert(config.keys, {
-    key = "LeftArrow", mods = "CMD|CTRL", action = wezterm.action.ActivatePaneDirection("Left"),
-  })
-  table.insert(config.keys, {
-    key = "RightArrow", mods = "CMD|CTRL", action = wezterm.action.ActivatePaneDirection("Right"),
-  })
-  table.insert(config.keys, {
-    key = "UpArrow", mods = "CMD|CTRL", action = wezterm.action.ActivatePaneDirection("Up"),
-  })
-  table.insert(config.keys, {
-    key = "DownArrow", mods = "CMD|CTRL", action = wezterm.action.ActivatePaneDirection("Down"),
+    key = "f", mods = "CMD|CTRL", action = act.ToggleFullScreen,
   })
 end
+
+-- Panes : modificateurs selon l'OS
+local pane_mods
+if is_darwin then
+  pane_mods = { split = "CMD|CTRL", move = "CMD|CTRL", resize = "CMD|CTRL|ALT" }
+elseif is_linux then
+  -- Combinaisons absentes des raccourcis par défaut de GNOME
+  -- (GNOME utilise Super+…, Ctrl+Alt+flèches et Ctrl+Shift+Alt+flèches)
+  pane_mods = { split = "CTRL|ALT", move = "CTRL|SHIFT", resize = "ALT|SHIFT" }
+end
+
+if pane_mods then
+  -- Split panes
+  table.insert(config.keys, {
+    key = '"', mods = pane_mods.split, action = act.SplitHorizontal,
+  })
+  table.insert(config.keys, {
+    key = "=", mods = pane_mods.split, action = act.SplitVertical,
+  })
+
+  -- Switch panes et resize panes
+  local directions = {
+    { key = "LeftArrow",  dir = "Left"  },
+    { key = "RightArrow", dir = "Right" },
+    { key = "UpArrow",    dir = "Up"    },
+    { key = "DownArrow",  dir = "Down"  },
+  }
+  for _, d in ipairs(directions) do
+    table.insert(config.keys, {
+      key = d.key, mods = pane_mods.move, action = act.ActivatePaneDirection(d.dir),
+    })
+    table.insert(config.keys, {
+      key = d.key, mods = pane_mods.resize, action = act.AdjustPaneSize({ d.dir, 2 }),
+    })
+  end
+end
+
+-- Raccourcis communs à toutes les plateformes
 table.insert(config.keys, {
-  key = "L", mods = "CTRL", action = wezterm.action.ShowDebugOverlay,
+  key = "L", mods = "CTRL", action = act.ShowDebugOverlay,
 })
 table.insert(config.keys, {
-  key = "@", mods = "CTRL", action = wezterm.action.DisableDefaultAssignment,
+  key = "@", mods = "CTRL", action = act.DisableDefaultAssignment,
 })
 
 -- Left option key macos
@@ -146,7 +178,7 @@ wezterm.on("format-tab-title", function(tab)
   local local_hostname    = wezterm.hostname() -- hostname de la machine qui exécute WezTerm
 
   local is_desktop_domain = (domain == "desktop" or domain == "SSH:desktop")
-      or (domain == "local" and local_hostname == "desktop")
+    or (domain == "local" and local_hostname == "desktop")
 
   local fg_color
   if tab.is_active then
